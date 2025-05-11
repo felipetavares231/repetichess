@@ -53,18 +53,6 @@ function Board({ onChange, chess, dests, setDests }: BoardProps) {
           check: chess.inCheck(),
 
           fen: chess.fen(),
-
-          drawable: {
-            visible: true,
-            onChange: (e) => console.log(e),
-            autoShapes: [
-              {
-                orig: "e4",
-                dest: "d5",
-                brush: "green",
-              },
-            ],
-          },
         }}
       />
       <Button
