@@ -1,0 +1,20 @@
+import { NextResponse } from 'next/server';
+import { db } from '../../lib/drizzle';
+import { BoardTable } from '../../lib/BoardTable';
+
+export async function POST(req: Request) {
+  const body = await req.json();
+  const { ownerId, board } = body;
+
+  try {
+    const result = await db
+      .insert(BoardTable)
+      .values({ ownerId, board }) // board is an array of strings
+      .returning();
+
+    return NextResponse.json({ board: result[0] }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json({ error: 'Failed to insert board' }, { status: 500 });
+  }
+}
