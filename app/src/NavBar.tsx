@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useTheme } from "@mui/material";
 import Image from "next/image";
@@ -11,11 +12,7 @@ function NavBar() {
       }}
       className="h-16 mb-4"
     >
-      <Image
-        src={"../../public/repetichesslogo3.png"}
-        alt="logo"
-        className="h-16"
-      />
+      <img src={"/logo.png"} alt="logo" className="h-16" />
     </div>
   );
 }

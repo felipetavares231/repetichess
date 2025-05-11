@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useState } from "react";
 import { Chess } from "chess.js";
 import NavBar from "../src/NavBar";

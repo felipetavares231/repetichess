@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect } from "react";
 import { Button, ButtonBase, Typography, useTheme } from "@mui/material";
 import { useQuery } from "react-query";
@@ -61,9 +62,10 @@ function OpeningExplorer({
           {data.opening?.name ? data.opening.name : "Opening Explorer"}
         </Typography>
       </div>
-      {data.moves.map((move: any) => {
+      {data.moves.map((move: any, index: number) => {
         return (
           <div
+            key={`${move} - ${index}`}
             className="flex ml-4 mt-2 justify-between"
             onClick={() => {
               onClickMove(move.san);

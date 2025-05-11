@@ -1,6 +1,7 @@
+"use client";
 import { Button, createTheme, useTheme } from "@mui/material";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function Home() {
@@ -13,7 +14,7 @@ export default function Home() {
       className="flex justify-center items-center min-h-screen flex-col"
       style={{ backgroundColor: theme.palette.primary.main }}
     >
-      <Image src={"../public/repetichesslogo3.png"} alt="logo" />
+      <img src={"/logo.png"} alt="logo" />
       <Button variant="contained" onClick={() => router.push("/learn")}>
         Start Learning
       </Button>
