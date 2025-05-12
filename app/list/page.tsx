@@ -15,11 +15,14 @@ import Chessground from "@react-chess/chessground";
 import "chessground/assets/chessground.base.css";
 import "chessground/assets/chessground.brown.css";
 import "chessground/assets/chessground.cburnett.css";
+import { useRouter } from "next/navigation";
 
 function ListOpening() {
   const user = useUser();
 
   const theme = useTheme();
+
+  const router = useRouter();
 
   const { data, isLoading } = useQuery({
     queryKey: ["boards", user?.id],
@@ -62,6 +65,10 @@ function ListOpening() {
             return (
               <div
                 key={`board ${board.id}`}
+                onClick={() => {
+                  if (!user) return;
+                  router.push(`/practice?board=${board.id}`);
+                }}
                 className="p-2 rounded-md mr-4 transition-transform duration-200 hover:scale-105"
                 style={{
                   backgroundColor: theme.palette.primary.main,

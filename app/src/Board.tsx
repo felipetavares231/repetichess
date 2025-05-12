@@ -29,12 +29,7 @@ function Board({ onChange, chess, dests, setDests }: BoardProps) {
   }, [chess.fen()]);
 
   return (
-    <div
-      style={{
-        width: size,
-        height: size,
-      }}
-    >
+    <div>
       <Chessground
         width={size}
         height={size}
