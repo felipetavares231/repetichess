@@ -15,9 +15,10 @@ interface BoardProps {
   chess: Chess;
   dests: Map<string, string[]>;
   setDests: React.Dispatch<React.SetStateAction<Map<string, string[]>>>;
+  orientation?: "black" | "white";
 }
 
-function Board({ onChange, chess, dests, setDests }: BoardProps) {
+function Board({ onChange, chess, dests, setDests, orientation }: BoardProps) {
   const size = Math.min(window.innerWidth, window.innerHeight) - 100;
 
   useEffect(() => {
@@ -46,6 +47,7 @@ function Board({ onChange, chess, dests, setDests }: BoardProps) {
             dests: dests as any,
           },
           check: chess.inCheck(),
+          orientation: orientation,
 
           fen: chess.fen(),
         }}
