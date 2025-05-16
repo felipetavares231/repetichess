@@ -52,16 +52,6 @@ function Board({ onChange, chess, dests, setDests, orientation }: BoardProps) {
           fen: chess.fen(),
         }}
       />
-      <Button
-        onClick={() => {
-          console.log(chess);
-          console.log(dests);
-          console.log(chess.fen());
-          console.log(chess.history());
-        }}
-      >
-        LOG CHESS
-      </Button>
     </div>
   );
 }

@@ -6,11 +6,12 @@ import Board from "../src/Board";
 import OpeningExplorer from "../src/OpeningExplorer";
 import { updateDests } from "../utils/updateDests";
 import { useUser } from "@stackframe/stack";
-import { Box, Icon, IconButton } from "@mui/material";
+import { Box, Button, Icon, IconButton } from "@mui/material";
 import { Done } from "@mui/icons-material";
 import { useQuery } from "react-query";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
+import InteractiveBox from "../src/InteractiveBox";
 
 function PracticeOpening() {
   const [fen, setFen] = useState<string | undefined>();
@@ -21,12 +22,15 @@ function PracticeOpening() {
 
   const [moveCount, setMoveCount] = useState(0);
 
+  const [correct, setCorrect] = useState<boolean | undefined>(undefined);
+
   const user = useUser();
 
   const searchParams = useSearchParams();
 
   const { data, isLoading } = useQuery({
     queryKey: ["getBoard", user?.id],
+    refetchOnWindowFocus: false,
     queryFn: async () => {
       if (!user) return null;
 
@@ -71,10 +75,8 @@ function PracticeOpening() {
       if (index > rng) {
         return;
       }
-      setTimeout(() => {
-        chess.move(move);
-        updateDests(chess, dests, setDests);
-      }, 3000);
+      chess.move(move);
+      updateDests(chess, dests, setDests);
     });
   };
 
@@ -85,15 +87,24 @@ function PracticeOpening() {
     const myMove = history[history.length - 1];
     const intendedMove = data.board[moveCount + 1];
     const nextMove = data.board[moveCount + 2];
+    const turn = chess.turn();
 
-    console.log("intendedMove: ", intendedMove);
-    console.log("myMove: ", myMove);
-    console.log("nextMove: ", nextMove);
+    if (turn !== data.orientation[0]) {
+      if (myMove == intendedMove) {
+        setCorrect(true);
 
-    if (myMove == intendedMove) {
-      chess.move(data.board[moveCount + 2]);
-      updateDests(chess, dests, setDests);
-      setMoveCount((prev) => prev + 1);
+        if (nextMove !== undefined) {
+          chess.move(nextMove);
+          updateDests(chess, dests, setDests);
+          setMoveCount((prev) => prev + 2);
+        } else {
+          console.log("NO NEXT MOVES"); //TODO: display no next moves message on screen
+        }
+      } else {
+        setCorrect(false);
+        chess.undo();
+        updateDests(chess, dests, setDests);
+      }
     }
 
     console.log(chess.history());
@@ -104,16 +115,12 @@ function PracticeOpening() {
     autoMove();
   }, [data]);
 
-  useEffect(() => {
-    console.log("move count: ", moveCount);
-  }, [moveCount]);
-
   return (
     <div>
       <NavBar />
       <div className="flex flex-1 justify-center">
         <div className="flex flex-1"></div>
-        <div className="ml-4">
+        <div className="ml-4 flex flex-row">
           <Board
             orientation={data?.orientation}
             onChange={(fen) => setFen(fen)}
@@ -121,6 +128,7 @@ function PracticeOpening() {
             dests={dests}
             setDests={setDests}
           />
+          <InteractiveBox correct={correct} />
         </div>
         <div className="flex flex-1"></div>
       </div>
