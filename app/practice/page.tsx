@@ -24,6 +24,8 @@ function PracticeOpening() {
 
   const [correct, setCorrect] = useState<boolean | undefined>(undefined);
 
+  const [isOver, setIsOver] = useState(false);
+
   const user = useUser();
 
   const searchParams = useSearchParams();
@@ -98,7 +100,7 @@ function PracticeOpening() {
           updateDests(chess, dests, setDests);
           setMoveCount((prev) => prev + 2);
         } else {
-          console.log("NO NEXT MOVES"); //TODO: display no next moves message on screen
+          setIsOver(true);
         }
       } else {
         setCorrect(false);
@@ -128,7 +130,7 @@ function PracticeOpening() {
             dests={dests}
             setDests={setDests}
           />
-          <InteractiveBox correct={correct} />
+          <InteractiveBox correct={correct} isOver={isOver} />
         </div>
         <div className="flex flex-1"></div>
       </div>

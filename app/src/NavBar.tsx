@@ -6,6 +6,7 @@ import Link from "next/link";
 
 function NavBar() {
   const theme = useTheme();
+
   return (
     <div
       style={{

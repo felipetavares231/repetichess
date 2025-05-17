@@ -1,14 +1,15 @@
 "use client";
 import React, { useMemo } from "react";
-import { Typography, useTheme } from "@mui/material";
+import { Button, Typography, useTheme } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 interface InteractiveBoxProps {
   correct?: boolean;
+  isOver: boolean;
 }
 
-function InteractiveBox({ correct }: InteractiveBoxProps) {
+function InteractiveBox({ correct, isOver }: InteractiveBoxProps) {
   const theme = useTheme();
 
   const correctMoveMessages = [
@@ -68,8 +69,16 @@ function InteractiveBox({ correct }: InteractiveBoxProps) {
         <ErrorOutlineIcon fontSize="large" />
       )}
       <Typography variant="h6" fontWeight="bold">
-        {message}
+        {isOver ? "Nice! How Dificult was it to recall this opening?" : message}
       </Typography>
+      {isOver && (
+        <div className="flex flex-1 flex-row">
+          <Button>Very Difficult</Button>
+          <Button>Hard</Button>
+          <Button>Medium</Button>
+          <Button>Easy</Button>
+        </div>
+      )}
     </div>
   );
 }
