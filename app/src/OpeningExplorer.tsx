@@ -1,15 +1,23 @@
 "use client";
-import React, { useEffect } from "react";
-import { Button, ButtonBase, Typography, useTheme } from "@mui/material";
-import { useQuery } from "react-query";
+import React, {useEffect} from "react";
+import {
+  Button,
+  ButtonBase,
+  IconButton,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import {useQuery} from "react-query";
 import ExplorerBar from "./ExplorerBar";
-import { Chess } from "chess.js";
+import {Chess} from "chess.js";
+import {ChevronLeft, SwapVert, SwapVerticalCircle} from "@mui/icons-material";
 
 interface OpeningExplorerProps {
   fen: string;
   ratings: string;
   onClickMove: (move: "string") => void;
   onUndo: () => void;
+  onChangeOrientation: () => void;
 }
 
 function OpeningExplorer({
@@ -17,9 +25,10 @@ function OpeningExplorer({
   ratings,
   onClickMove,
   onUndo,
+  onChangeOrientation,
 }: OpeningExplorerProps) {
   const theme = useTheme();
-  const { data, isLoading, refetch } = useQuery({
+  const {data, isLoading, refetch} = useQuery({
     queryKey: ["lichessExplorer"],
     queryFn: async () => {
       const params = new URLSearchParams({
@@ -43,22 +52,20 @@ function OpeningExplorer({
     refetch();
   }, [fen]);
 
-  if (!data) return <></>;
+  if (!data) return <div className="ml-4 rounded-md flex-1 mr-4"></div>;
 
   return (
     <div
-      className="ml-4 rounded-md flex-1 mr-4"
+      className="ml-4 rounded-md flex-1 mr-4 p-4"
       style={{
         backgroundColor: "#262626",
-      }}
-    >
+      }}>
       <div className=" text-center mt-2">
         <Typography
           variant="h6"
           style={{
             fontWeight: "bold",
-          }}
-        >
+          }}>
           {data.opening?.name ? data.opening.name : "Opening Explorer"}
         </Typography>
       </div>
@@ -69,8 +76,7 @@ function OpeningExplorer({
             className="flex ml-4 mt-2 justify-between"
             onClick={() => {
               onClickMove(move.san);
-            }}
-          >
+            }}>
             <div>
               <Typography>{move.san}</Typography>
             </div>
@@ -85,7 +91,34 @@ function OpeningExplorer({
           </div>
         );
       })}
-      <Button onClick={onUndo}>BACK</Button>
+      <div className="ml-4 mt-2">
+        <IconButton
+          onClick={onUndo}
+          sx={{
+            marginRight: "8px",
+            borderRadius: "8px",
+            backgroundColor: "primary.main",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "primary.dark",
+            },
+          }}>
+          <ChevronLeft />
+        </IconButton>
+
+        <IconButton
+          onClick={onChangeOrientation}
+          sx={{
+            borderRadius: "8px",
+            backgroundColor: "primary.main",
+            color: "white",
+            "&:hover": {
+              backgroundColor: "primary.dark",
+            },
+          }}>
+          <SwapVert />
+        </IconButton>
+      </div>
     </div>
   );
 }

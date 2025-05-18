@@ -1,6 +1,6 @@
 "use client";
-import React, { useMemo } from "react";
-import { Button, Typography, useTheme } from "@mui/material";
+import React, {useMemo} from "react";
+import {Button, Typography, useTheme} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
@@ -9,7 +9,7 @@ interface InteractiveBoxProps {
   isOver: boolean;
 }
 
-function InteractiveBox({ correct, isOver }: InteractiveBoxProps) {
+function InteractiveBox({correct, isOver}: InteractiveBoxProps) {
   const theme = useTheme();
 
   const correctMoveMessages = [
@@ -44,7 +44,10 @@ function InteractiveBox({ correct, isOver }: InteractiveBoxProps) {
     return messages[Math.floor(Math.random() * messages.length)];
   }, [correct]);
 
-  if (correct === undefined) return null;
+  if (correct === undefined)
+    return (
+      <div className="w-[300px]  rounded-2xl p-4 flex items-center gap-3 shadow-lg"></div>
+    );
 
   const bgColor = correct
     ? theme.palette.success.main
@@ -56,13 +59,12 @@ function InteractiveBox({ correct, isOver }: InteractiveBoxProps) {
 
   return (
     <div
-      className="w-[300px]  rounded-2xl p-4 flex items-center gap-3 shadow-lg"
+      className="w-[400px]  rounded-2xl p-4 flex items-center gap-3 shadow-lg flex-col"
       style={{
         backgroundColor: "#262626",
         border: `2px solid ${borderColor}`,
         transition: "background-color 0.3s ease, border-color 0.3s ease",
-      }}
-    >
+      }}>
       {correct ? (
         <CheckCircleIcon fontSize="large" />
       ) : (
@@ -72,11 +74,12 @@ function InteractiveBox({ correct, isOver }: InteractiveBoxProps) {
         {isOver ? "Nice! How Dificult was it to recall this opening?" : message}
       </Typography>
       {isOver && (
-        <div className="flex flex-1 flex-row">
-          <Button>Very Difficult</Button>
-          <Button>Hard</Button>
-          <Button>Medium</Button>
-          <Button>Easy</Button>
+        <div className="flex flex-row gap-x-8">
+          <Button variant="contained" className="mr-2">
+            Hard
+          </Button>
+          <Button variant="contained">Medium</Button>
+          <Button variant="contained">Easy</Button>
         </div>
       )}
     </div>

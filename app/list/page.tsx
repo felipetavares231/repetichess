@@ -1,21 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Chess } from "chess.js";
+import React, {useEffect, useState} from "react";
+import {Chess} from "chess.js";
 import NavBar from "../src/NavBar";
 import Board from "../src/Board";
 import OpeningExplorer from "../src/OpeningExplorer";
-import { updateDests } from "../utils/updateDests";
-import { useUser } from "@stackframe/stack";
-import { Box, Icon, IconButton, Typography, useTheme } from "@mui/material";
-import { Done } from "@mui/icons-material";
-import { useQuery } from "react-query";
+import {updateDests} from "../utils/updateDests";
+import {useUser} from "@stackframe/stack";
+import {Box, Icon, IconButton, Typography, useTheme} from "@mui/material";
+import {Done} from "@mui/icons-material";
+import {useQuery} from "react-query";
 import Chessground from "@react-chess/chessground";
 
 // these styles must be imported somewhere
 import "chessground/assets/chessground.base.css";
 import "chessground/assets/chessground.brown.css";
 import "chessground/assets/chessground.cburnett.css";
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
 
 function ListOpening() {
   const user = useUser();
@@ -24,7 +24,7 @@ function ListOpening() {
 
   const router = useRouter();
 
-  const { data, isLoading } = useQuery({
+  const {data, isLoading} = useQuery({
     queryKey: ["boards", user?.id],
     queryFn: async () => {
       if (!user) return null;
@@ -54,7 +54,7 @@ function ListOpening() {
   return (
     <div>
       <NavBar />
-      <div className="flex flex-1 justify-center">
+      <div className="flex flex-wrap justify-start ml-8">
         {data &&
           data.map((board: any) => {
             const chess = new Chess();
@@ -69,11 +69,10 @@ function ListOpening() {
                   if (!user) return;
                   router.push(`/practice?board=${board.id}`);
                 }}
-                className="p-2 rounded-md mr-4 transition-transform duration-200 hover:scale-105"
+                className="p-2 rounded-md transition-transform duration-200 hover:scale-105 ml-4 mb-8"
                 style={{
                   backgroundColor: theme.palette.primary.main,
-                }}
-              >
+                }}>
                 <Chessground
                   key={`board ${board.id}`}
                   width={450}
@@ -86,12 +85,7 @@ function ListOpening() {
                   }}
                 />
                 <div className="text-center">
-                  <Typography
-                    variant="h5"
-                    style={{
-                      fontWeight: "bold",
-                    }}
-                  >
+                  <Typography variant="h5" style={{fontWeight: "bold"}}>
                     {board.name}
                   </Typography>
                 </div>

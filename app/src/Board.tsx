@@ -1,14 +1,14 @@
-import { Button } from "@mui/material";
+import {Button} from "@mui/material";
 import Chessground from "@react-chess/chessground";
-import { Chess, Move } from "chess.js";
+import {Chess, Move} from "chess.js";
 
 // these styles must be imported somewhere
 import "chessground/assets/chessground.base.css";
 import "chessground/assets/chessground.brown.css";
 import "chessground/assets/chessground.cburnett.css";
-import { useEffect, useRef, useState } from "react";
+import {useEffect, useRef, useState} from "react";
 import React from "react";
-import { updateDests } from "../utils/updateDests";
+import {updateDests} from "../utils/updateDests";
 
 interface BoardProps {
   onChange: (fen: string) => void;
@@ -18,7 +18,7 @@ interface BoardProps {
   orientation?: "black" | "white";
 }
 
-function Board({ onChange, chess, dests, setDests, orientation }: BoardProps) {
+function Board({onChange, chess, dests, setDests, orientation}: BoardProps) {
   const size = Math.min(window.innerWidth, window.innerHeight) - 100;
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function Board({ onChange, chess, dests, setDests, orientation }: BoardProps) {
         config={{
           events: {
             move: (from, to) => {
-              chess.move({ from: from, to: to });
+              chess.move({from: from, to: to});
               console.log(from, to);
               updateDests(chess, dests, setDests);
             },

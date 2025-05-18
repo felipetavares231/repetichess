@@ -1,16 +1,16 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { Chess } from "chess.js";
+import React, {useEffect, useState} from "react";
+import {Chess} from "chess.js";
 import NavBar from "../src/NavBar";
 import Board from "../src/Board";
 import OpeningExplorer from "../src/OpeningExplorer";
-import { updateDests } from "../utils/updateDests";
-import { useUser } from "@stackframe/stack";
-import { Box, Button, Icon, IconButton } from "@mui/material";
-import { Done } from "@mui/icons-material";
-import { useQuery } from "react-query";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import {updateDests} from "../utils/updateDests";
+import {useUser} from "@stackframe/stack";
+import {Box, Button, Icon, IconButton} from "@mui/material";
+import {Done} from "@mui/icons-material";
+import {useQuery} from "react-query";
+import {useSearchParams} from "next/navigation";
+import {useRouter} from "next/router";
 import InteractiveBox from "../src/InteractiveBox";
 
 function PracticeOpening() {
@@ -30,7 +30,7 @@ function PracticeOpening() {
 
   const searchParams = useSearchParams();
 
-  const { data, isLoading } = useQuery({
+  const {data, isLoading} = useQuery({
     queryKey: ["getBoard", user?.id],
     refetchOnWindowFocus: false,
     queryFn: async () => {
@@ -117,6 +117,12 @@ function PracticeOpening() {
     autoMove();
   }, [data]);
 
+  useEffect(() => {
+    if (chess.history().length == data.board.length) {
+      setIsOver(true);
+    }
+  }, [chess.history()]);
+
   return (
     <div>
       <NavBar />
@@ -132,7 +138,9 @@ function PracticeOpening() {
           />
           <InteractiveBox correct={correct} isOver={isOver} />
         </div>
-        <div className="flex flex-1"></div>
+        <div className="flex flex-1">
+          <Button>LOG</Button>
+        </div>
       </div>
     </div>
   );
