@@ -4,13 +4,59 @@ import {Button, Typography, useTheme} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
+import {Difficulty, getNextReviewInfo} from "../utils/getNextReviewDate";
+import {useUser} from "@stackframe/stack";
+import {useRouter} from "next/navigation";
+
 interface InteractiveBoxProps {
   correct?: boolean;
   isOver: boolean;
+  currentInterval: number;
+  easeFactor: number;
+  lastReviewDate: Date;
+  boardId: number;
 }
 
-function InteractiveBox({correct, isOver}: InteractiveBoxProps) {
+function InteractiveBox({
+  correct,
+  isOver,
+  currentInterval,
+  easeFactor,
+  lastReviewDate,
+  boardId,
+}: InteractiveBoxProps) {
   const theme = useTheme();
+
+  const user = useUser();
+
+  const router = useRouter();
+
+  const handleReviewDifficulty = async (difficulty: Difficulty) => {
+    console.log("DIFFICULTY: ", difficulty);
+    console.log("EASEFACTOR> ", easeFactor);
+    const {newEaseFactor, nextInterval, nextReviewDate} = getNextReviewInfo({
+      currentInterval,
+      easeFactor,
+      lastReviewDate,
+      difficulty,
+    });
+
+    const response = await fetch("/api/updateReviewDate", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        nextInterval,
+        newEaseFactor,
+        nextReviewDate,
+        boardId,
+        ownerId: user?.id,
+      }),
+    });
+
+    if (response.ok) {
+      router.push("/list");
+    }
+  };
 
   const correctMoveMessages = [
     "Nice! That's the right idea.",
@@ -57,6 +103,8 @@ function InteractiveBox({correct, isOver}: InteractiveBoxProps) {
     ? theme.palette.text.primary
     : theme.palette.error.main;
 
+  const difficulties: Difficulty[] = ["Easy", "Medium", "Hard"];
+
   return (
     <div
       className="w-[400px]  rounded-2xl p-4 flex items-center gap-3 shadow-lg flex-col"
@@ -75,11 +123,16 @@ function InteractiveBox({correct, isOver}: InteractiveBoxProps) {
       </Typography>
       {isOver && (
         <div className="flex flex-row gap-x-8">
-          <Button variant="contained" className="mr-2">
-            Hard
-          </Button>
-          <Button variant="contained">Medium</Button>
-          <Button variant="contained">Easy</Button>
+          {difficulties.map((difficulty: Difficulty) => {
+            return (
+              <Button
+                key={`difficultybutton: ${difficulty}`}
+                variant="contained"
+                onClick={() => handleReviewDifficulty(difficulty)}>
+                {difficulty}
+              </Button>
+            );
+          })}
         </div>
       )}
     </div>

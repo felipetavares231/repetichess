@@ -118,6 +118,7 @@ function PracticeOpening() {
   }, [data]);
 
   useEffect(() => {
+    if (!data) return;
     if (chess.history().length == data.board.length) {
       setIsOver(true);
     }
@@ -136,7 +137,14 @@ function PracticeOpening() {
             dests={dests}
             setDests={setDests}
           />
-          <InteractiveBox correct={correct} isOver={isOver} />
+          <InteractiveBox
+            correct={correct}
+            isOver={isOver}
+            currentInterval={data?.currentInterval}
+            easeFactor={parseFloat(data?.easeFactor)}
+            lastReviewDate={data?.lastReviewDate}
+            boardId={data?.id}
+          />
         </div>
         <div className="flex flex-1">
           <Button>LOG</Button>

@@ -9,7 +9,15 @@ export async function POST(req: Request) {
   try {
     const result = await db
       .insert(BoardTable)
-      .values({ownerId, board, name, orientation}) // board is an array of strings
+      .values({
+        ownerId: ownerId,
+        board: board,
+        name: name,
+        orientation: orientation,
+        currentInterval: 1,
+        easeFactor: 2.5,
+        lastReviewDate: new Date(),
+      }) // board is an array of strings
       .returning();
 
     return NextResponse.json({board: result[0]}, {status: 200});
