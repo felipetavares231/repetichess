@@ -12,7 +12,7 @@ function NavBar() {
       style={{
         backgroundColor: theme.palette.primary.main,
       }}
-      className="h-16 mb-4 flex flex-row text-center items-center font-bold">
+      className="h-16 mb-4 flex flex-1 flex-row text-center items-center font-bold">
       <img src={"/logo.png"} alt="logo" className="h-16" />
       <div className="flex flex-1"></div>
       <Link href={"/list"} className="mr-4">

@@ -6,8 +6,15 @@ import Board from "../src/Board";
 import OpeningExplorer from "../src/OpeningExplorer";
 import {updateDests} from "../utils/updateDests";
 import {useUser} from "@stackframe/stack";
-import {Box, Icon, IconButton, Typography, useTheme} from "@mui/material";
-import {Done} from "@mui/icons-material";
+import {
+  Box,
+  Icon,
+  IconButton,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
+import {Done, Report, Warning} from "@mui/icons-material";
 import {useQuery} from "react-query";
 import Chessground from "@react-chess/chessground";
 
@@ -16,6 +23,7 @@ import "chessground/assets/chessground.base.css";
 import "chessground/assets/chessground.brown.css";
 import "chessground/assets/chessground.cburnett.css";
 import {useRouter} from "next/navigation";
+import {format, isBefore} from "date-fns";
 
 function ListOpening() {
   const user = useUser();
@@ -54,7 +62,7 @@ function ListOpening() {
   return (
     <div>
       <NavBar />
-      <div className="flex flex-wrap justify-start ml-8">
+      <div className="flex flex-wrap justify-center ml-8">
         {data &&
           data.map((board: any) => {
             const chess = new Chess();
@@ -69,7 +77,7 @@ function ListOpening() {
                   if (!user) return;
                   router.push(`/practice?board=${board.id}`);
                 }}
-                className="p-2 rounded-md transition-transform duration-200 hover:scale-105 ml-4 mb-8"
+                className="p-2 rounded-md transition-transform duration-200 hover:scale-105 ml-4 mb-8 relative"
                 style={{
                   backgroundColor: theme.palette.primary.main,
                 }}>
@@ -84,6 +92,25 @@ function ListOpening() {
                     orientation: board.orientation,
                   }}
                 />
+                <div
+                  className="absolute top-0 left-0 rounded-md"
+                  style={{
+                    backgroundColor: theme.palette.primary.main,
+                  }}>
+                  {isBefore(board.lastReviewDate, new Date()) ? (
+                    <Tooltip title="Needs Reviewing">
+                      <Report />
+                    </Tooltip>
+                  ) : (
+                    <Tooltip
+                      title={`Last Time Reviewed: ${format(
+                        board.lastReviewDate,
+                        "MM/dd/yyyy",
+                      )}`}>
+                      <Done />
+                    </Tooltip>
+                  )}
+                </div>
                 <div className="text-center">
                   <Typography variant="h5" style={{fontWeight: "bold"}}>
                     {board.name}
