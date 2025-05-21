@@ -17,7 +17,7 @@ import {
   Typography,
 } from "@mui/material";
 import {Done} from "@mui/icons-material";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import {useQuery} from "react-query";
 
 type Ratings = "0,1000,2500" | "1200,1400,1600,2500" | "1800,2000,2200,2500";
@@ -64,6 +64,34 @@ function LearnOpening() {
     enabled: !!user,
   });
 
+  const searchParams = useSearchParams();
+  const board = searchParams.get("board");
+
+  const {data: boardData, isLoading: isLoadingBoard} = useQuery({
+    queryKey: ["getBoard", user?.id],
+    refetchOnWindowFocus: false,
+    queryFn: async () => {
+      if (!user) return null;
+
+      const params = new URLSearchParams();
+      params.set("ownerId", user.id);
+      params.set("boardId", board || "");
+
+      const response = await fetch(`/api/getBoard?${params.toString()}`, {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch board");
+      }
+
+      const json = await response.json();
+      return json.result;
+    },
+    enabled: !!user && !!board,
+  });
+
   const handleSaveBoard = async () => {
     if (!user) {
       console.log("no user");
@@ -78,14 +106,20 @@ function LearnOpening() {
         board: chess.history(),
         name: boardName,
         orientation: orientation,
+        boardId: board,
       }),
     });
     router.push("/list");
   };
 
   useEffect(() => {
-    console.log(chess.history());
-  }, [fen]);
+    if (boardData?.board) {
+      boardData.board.map((move: string) => {
+        chess.move(move);
+        updateDests(chess, dests, setDests);
+      });
+    }
+  }, [boardData]);
 
   useEffect(() => {
     if (!preferences) return;

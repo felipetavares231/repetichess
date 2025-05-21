@@ -7,7 +7,7 @@ import OpeningExplorer from "../src/OpeningExplorer";
 import {updateDests} from "../utils/updateDests";
 import {useUser} from "@stackframe/stack";
 import {Box, Button, Icon, IconButton} from "@mui/material";
-import {Delete, Done} from "@mui/icons-material";
+import {Delete, Done, Edit} from "@mui/icons-material";
 import {useQuery} from "react-query";
 import {useRouter, useSearchParams} from "next/navigation";
 import InteractiveBox from "../src/InteractiveBox";
@@ -70,6 +70,10 @@ function PracticeOpening() {
     if (response.ok) {
       router.push("/list");
     }
+  };
+
+  const handleEditBoard = async () => {
+    router.push(`/learn?board=${board}`);
   };
 
   const autoMove = () => {
@@ -145,7 +149,7 @@ function PracticeOpening() {
       <div className="flex flex-1 justify-center">
         <div className="flex flex-1"></div>
         <div className="ml-4 flex flex-row">
-          <div className="mr-2">
+          <div className="mr-2 flex-col flex">
             <IconButton
               onClick={handleDeleteBoard}
               sx={{
@@ -157,6 +161,19 @@ function PracticeOpening() {
                 },
               }}>
               <Delete />
+            </IconButton>
+            <div className="mt-2"></div>
+            <IconButton
+              onClick={handleEditBoard}
+              sx={{
+                borderRadius: "8px",
+                backgroundColor: "primary.main",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "primary.dark",
+                },
+              }}>
+              <Edit />
             </IconButton>
           </div>
           <Board
