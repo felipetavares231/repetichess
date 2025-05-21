@@ -7,10 +7,9 @@ import OpeningExplorer from "../src/OpeningExplorer";
 import {updateDests} from "../utils/updateDests";
 import {useUser} from "@stackframe/stack";
 import {Box, Button, Icon, IconButton} from "@mui/material";
-import {Done} from "@mui/icons-material";
+import {Delete, Done} from "@mui/icons-material";
 import {useQuery} from "react-query";
-import {useSearchParams} from "next/navigation";
-import {useRouter} from "next/router";
+import {useRouter, useSearchParams} from "next/navigation";
 import InteractiveBox from "../src/InteractiveBox";
 
 function PracticeOpening() {
@@ -28,15 +27,17 @@ function PracticeOpening() {
 
   const user = useUser();
 
+  const router = useRouter();
+
   const searchParams = useSearchParams();
+
+  const board = searchParams.get("board");
 
   const {data, isLoading} = useQuery({
     queryKey: ["getBoard", user?.id],
     refetchOnWindowFocus: false,
     queryFn: async () => {
       if (!user) return null;
-
-      const board = searchParams.get("board");
 
       const params = new URLSearchParams();
       params.set("ownerId", user.id);
@@ -56,6 +57,20 @@ function PracticeOpening() {
     },
     enabled: !!user,
   });
+
+  const handleDeleteBoard = async () => {
+    const response = await fetch("/api/deleteBoard", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        ownerId: user?.id,
+        boardId: board,
+      }),
+    });
+    if (response.ok) {
+      router.push("/list");
+    }
+  };
 
   const autoMove = () => {
     if (!data) return;
@@ -130,6 +145,20 @@ function PracticeOpening() {
       <div className="flex flex-1 justify-center">
         <div className="flex flex-1"></div>
         <div className="ml-4 flex flex-row">
+          <div className="mr-2">
+            <IconButton
+              onClick={handleDeleteBoard}
+              sx={{
+                borderRadius: "8px",
+                backgroundColor: "primary.main",
+                color: "white",
+                "&:hover": {
+                  backgroundColor: "primary.dark",
+                },
+              }}>
+              <Delete />
+            </IconButton>
+          </div>
           <Board
             orientation={data?.orientation}
             onChange={(fen) => setFen(fen)}
@@ -137,6 +166,7 @@ function PracticeOpening() {
             dests={dests}
             setDests={setDests}
           />
+          <div className="ml-4"></div>
           <InteractiveBox
             correct={correct}
             isOver={isOver}
@@ -145,9 +175,6 @@ function PracticeOpening() {
             lastReviewDate={data?.lastReviewDate}
             boardId={data?.id}
           />
-        </div>
-        <div className="flex flex-1">
-          <Button>LOG</Button>
         </div>
       </div>
     </div>
