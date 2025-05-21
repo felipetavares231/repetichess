@@ -18,6 +18,9 @@ import {
 } from "@mui/material";
 import {Done} from "@mui/icons-material";
 import {useRouter} from "next/navigation";
+import {useQuery} from "react-query";
+
+type Ratings = "0,1000,2500" | "1200,1400,1600,2500" | "1800,2000,2200,2500";
 
 function LearnOpening() {
   const [fen, setFen] = useState<string | undefined>();
@@ -32,9 +35,34 @@ function LearnOpening() {
 
   const [boardName, setBoardName] = useState("");
 
+  const [ratings, setRatings] = useState<Ratings>("0,1000,2500");
+
   const user = useUser();
 
   const router = useRouter();
+
+  const {data: preferences, isLoading} = useQuery({
+    queryKey: ["preferences", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+
+      const params = new URLSearchParams();
+      params.set("ownerId", user.id);
+
+      const response = await fetch(`/api/getPreferences?${params.toString()}`, {
+        method: "GET",
+        cache: "no-store",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get preferences");
+      }
+
+      const json = await response.json();
+      return json.preferences;
+    },
+    enabled: !!user,
+  });
 
   const handleSaveBoard = async () => {
     if (!user) {
@@ -58,6 +86,17 @@ function LearnOpening() {
   useEffect(() => {
     console.log(chess.history());
   }, [fen]);
+
+  useEffect(() => {
+    if (!preferences) return;
+    if (preferences.rating == "Beginner") {
+      setRatings("0,1000,2500");
+    } else if (preferences.rating == "Intermediate") {
+      setRatings("1200,1400,1600,2500");
+    } else {
+      setRatings("1800,2000,2200,2500");
+    }
+  }, [preferences]);
 
   return (
     <div>
@@ -101,7 +140,7 @@ function LearnOpening() {
                 updateDests(chess, dests, setDests);
               }}
               fen={fen}
-              ratings="1600,1800,2000"
+              ratings={ratings}
               onClickMove={(move) => {
                 chess.move(move);
                 setFen(chess.fen());
@@ -138,9 +177,6 @@ function LearnOpening() {
               fontWeight={"bold"}>
               Save Board
             </Typography>
-            <Typography
-              id="transition-modal-description"
-              sx={{mt: 2}}></Typography>
             <TextField
               onChange={(e) => setBoardName(e.target.value)}
               sx={{

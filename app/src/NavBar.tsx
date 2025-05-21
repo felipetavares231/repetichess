@@ -18,6 +18,9 @@ function NavBar() {
       <Link href={"/list"} className="mr-4">
         Openings
       </Link>
+      <Link href={"/preferences"} className="mr-4">
+        Preferences
+      </Link>
       <Link href={"/"} className="mr-4">
         Home
       </Link>

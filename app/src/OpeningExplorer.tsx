@@ -29,7 +29,7 @@ function OpeningExplorer({
 }: OpeningExplorerProps) {
   const theme = useTheme();
   const {data, isLoading, refetch} = useQuery({
-    queryKey: ["lichessExplorer"],
+    queryKey: ["lichessExplorer", ratings],
     queryFn: async () => {
       const params = new URLSearchParams({
         fen: fen,

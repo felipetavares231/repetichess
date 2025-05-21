@@ -14,7 +14,13 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import {Done, Report, Warning} from "@mui/icons-material";
+import {
+  Done,
+  MoreVert,
+  MoreVertOutlined,
+  Report,
+  Warning,
+} from "@mui/icons-material";
 import {useQuery} from "react-query";
 import Chessground from "@react-chess/chessground";
 
