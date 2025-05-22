@@ -81,7 +81,7 @@ function ListOpening() {
                 key={`board ${board.id}`}
                 onClick={() => {
                   if (!user) return;
-                  router.push(`/practice?board=${board.id}`);
+                  window.location.href = `/practice?board=${board.id}`;
                 }}
                 className="p-2 rounded-md transition-transform duration-200 hover:scale-105 ml-4 mb-8 relative"
                 style={{

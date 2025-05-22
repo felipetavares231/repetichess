@@ -15,13 +15,15 @@ import InteractiveBox from "../src/InteractiveBox";
 function PracticeOpening() {
   const [fen, setFen] = useState<string | undefined>();
 
-  const [chess] = useState(new Chess());
+  const [chess, setChess] = useState(new Chess());
 
   const [dests, setDests] = useState(new Map<string, string[]>());
 
   const [moveCount, setMoveCount] = useState(0);
 
   const [correct, setCorrect] = useState<boolean | undefined>(undefined);
+
+  const [isAutoMoving, setIsAutoMoving] = useState(true);
 
   const [isOver, setIsOver] = useState(false);
 
@@ -76,33 +78,8 @@ function PracticeOpening() {
     router.push(`/learn?board=${board}`);
   };
 
-  const autoMove = () => {
-    if (!data) return;
-
-    const max = data.board.length - 1;
-    const min = 0;
-    let rng = Math.floor(Math.random() * (max - min + 1) + min);
-
-    if (
-      (data.orientation == "white" && rng % 2 == 0) ||
-      (data.orientation == "black" && rng % 2 !== 0)
-    ) {
-      rng--;
-    }
-
-    setMoveCount(rng);
-
-    data.board.forEach((move: string, index: number) => {
-      if (index > rng) {
-        return;
-      }
-      chess.move(move);
-      updateDests(chess, dests, setDests);
-    });
-  };
-
   useEffect(() => {
-    if (!data) return;
+    if (!data || isAutoMoving) return;
 
     const history = chess.history();
     const myMove = history[history.length - 1];
@@ -131,6 +108,38 @@ function PracticeOpening() {
     console.log(chess.history());
   }, [fen]);
 
+  const makeMovesSequentially = async (moves: string[]) => {
+    for (let move of moves) {
+      const result = chess.move(move);
+      if (!result) {
+        console.error("Invalid move:", move);
+        break;
+      }
+      updateDests(chess, dests, setDests);
+      await new Promise((resolve) => setTimeout(resolve, 300)); // delay between moves
+    }
+  };
+
+  const autoMove = () => {
+    if (!data) return;
+
+    const max = data.board.length - 1;
+    const min = 0;
+    let rng = Math.floor(Math.random() * (max - min + 1) + min);
+
+    if (
+      (data.orientation == "white" && rng % 2 === 0) ||
+      (data.orientation == "black" && rng % 2 !== 0)
+    ) {
+      rng--;
+    }
+
+    setMoveCount(rng);
+
+    const openingSoFar = data.board.slice(0, rng + 1);
+    makeMovesSequentially(openingSoFar).then(() => setIsAutoMoving(false));
+  };
+
   useEffect(() => {
     console.log(data);
     autoMove();
@@ -144,9 +153,11 @@ function PracticeOpening() {
   }, [chess.history()]);
 
   return (
-    <div>
-      <NavBar />
-      <div className="flex flex-1 justify-center">
+    <div className="flex flex-col items-center">
+      <div className="flex flex-1 w-[100%]">
+        <NavBar />
+      </div>
+      <div className="flex justify-center items-center">
         <div className="flex flex-1"></div>
         <div className="ml-4 flex flex-row">
           <div className="mr-2 flex-col flex">
@@ -192,6 +203,7 @@ function PracticeOpening() {
             lastReviewDate={data?.lastReviewDate}
             boardId={data?.id}
           />
+          <div className="ml-4"></div>
         </div>
       </div>
     </div>

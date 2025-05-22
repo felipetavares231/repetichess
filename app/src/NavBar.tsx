@@ -3,6 +3,7 @@ import React from "react";
 import {useTheme} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import {UserButton} from "@stackframe/stack";
 
 function NavBar() {
   const theme = useTheme();
@@ -24,6 +25,9 @@ function NavBar() {
       <Link href={"/"} className="mr-4">
         Home
       </Link>
+      <div className="flex justify-center items-center mr-4">
+        <UserButton />
+      </div>
     </div>
   );
 }

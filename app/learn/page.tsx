@@ -25,7 +25,7 @@ type Ratings = "0,1000,2500" | "1200,1400,1600,2500" | "1800,2000,2200,2500";
 function LearnOpening() {
   const [fen, setFen] = useState<string | undefined>();
 
-  const [chess] = useState(new Chess());
+  const [chess, setChess] = useState(new Chess());
 
   const [dests, setDests] = useState(new Map<string, string[]>());
 
@@ -68,7 +68,7 @@ function LearnOpening() {
   const board = searchParams.get("board");
 
   const {data: boardData, isLoading: isLoadingBoard} = useQuery({
-    queryKey: ["getBoard", user?.id],
+    queryKey: ["getBoard", user?.id, board],
     refetchOnWindowFocus: false,
     queryFn: async () => {
       if (!user) return null;
@@ -113,12 +113,35 @@ function LearnOpening() {
   };
 
   useEffect(() => {
-    if (boardData?.board) {
-      boardData.board.map((move: string) => {
-        chess.move(move);
-        updateDests(chess, dests, setDests);
-      });
-    }
+    if (!boardData?.board || boardData.board.length === 0) return;
+
+    const tempChess = new Chess();
+
+    let i = 0;
+
+    const playMoves = () => {
+      if (i < boardData.board.length) {
+        const move = boardData.board[i];
+        const result = tempChess.move(move);
+        if (result) {
+          updateDests(tempChess, dests, setDests);
+        } else {
+          console.warn(`Invalid move at index ${i}:`, move);
+        }
+        i++;
+        setTimeout(playMoves, 50);
+      } else {
+        setFen(tempChess.fen());
+        updateDests(tempChess, dests, setDests);
+        setChess(tempChess); // ✅ update chess instance state
+      }
+    };
+
+    playMoves();
+
+    return () => {
+      tempChess.reset(); // cleanup
+    };
   }, [boardData]);
 
   useEffect(() => {
@@ -133,8 +156,10 @@ function LearnOpening() {
   }, [preferences]);
 
   return (
-    <div>
-      <NavBar />
+    <div className="flex flex-col items-center">
+      <div className="w-[100%]">
+        <NavBar />
+      </div>
       <div className="flex flex-1 justify-center">
         <div className="flex-1"></div>
         <div className="flex flex-1">
