@@ -61,10 +61,6 @@ function ListOpening() {
     enabled: !!user,
   });
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   return (
     <div>
       <NavBar />

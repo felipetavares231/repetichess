@@ -104,8 +104,6 @@ function PracticeOpening() {
         updateDests(chess, dests, setDests);
       }
     }
-
-    console.log(chess.history());
   }, [fen]);
 
   const makeMovesSequentially = async (moves: string[]) => {
@@ -141,7 +139,6 @@ function PracticeOpening() {
   };
 
   useEffect(() => {
-    console.log(data);
     autoMove();
   }, [data]);
 

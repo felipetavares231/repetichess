@@ -1,9 +1,9 @@
-import {NextResponse} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 import {db} from "../../lib/drizzle";
 import {PreferencesTable} from "../../lib/PreferencesTable";
 import {eq} from "drizzle-orm";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
   const {ownerId, rating, coverage} = body;
 

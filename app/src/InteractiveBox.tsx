@@ -32,8 +32,6 @@ function InteractiveBox({
   const router = useRouter();
 
   const handleReviewDifficulty = async (difficulty: Difficulty) => {
-    console.log("DIFFICULTY: ", difficulty);
-    console.log("EASEFACTOR> ", easeFactor);
     const {newEaseFactor, nextInterval, nextReviewDate} = getNextReviewInfo({
       currentInterval,
       easeFactor,

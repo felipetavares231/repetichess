@@ -1,9 +1,9 @@
 import {and, eq} from "drizzle-orm";
 import {BoardTable} from "../../lib/BoardTable";
 import {db} from "../../lib/drizzle";
-import {NextResponse} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const body = await req.json();
   const {nextInterval, newEaseFactor, nextReviewDate, boardId, ownerId} = body;
 

@@ -38,7 +38,6 @@ function Board({onChange, chess, dests, setDests, orientation}: BoardProps) {
           events: {
             move: (from, to) => {
               chess.move({from: from, to: to});
-              console.log(from, to);
               updateDests(chess, dests, setDests);
             },
           },

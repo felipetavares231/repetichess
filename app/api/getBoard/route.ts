@@ -1,9 +1,9 @@
-import {NextResponse} from "next/server";
+import {NextRequest, NextResponse} from "next/server";
 import {db} from "../../lib/drizzle";
 import {BoardTable} from "../../lib/BoardTable";
 import {and, eq} from "drizzle-orm";
 
-export async function GET(req: Request, res: Response) {
+export async function GET(req: NextRequest) {
   const {searchParams} = new URL(req.url);
 
   const ownerId = searchParams.get("ownerId");

@@ -60,11 +60,6 @@ function OpeningExplorer({
   }, [data, coverage]);
 
   useEffect(() => {
-    console.log("FEN RECEIVED BY OPENING EXPLORER: ", fen);
-    console.log(data);
-  }, [data]);
-
-  useEffect(() => {
     refetch();
   }, [fen]);
 

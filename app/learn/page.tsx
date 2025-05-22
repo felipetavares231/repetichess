@@ -94,7 +94,6 @@ function LearnOpening() {
 
   const handleSaveBoard = async () => {
     if (!user) {
-      console.log("no user");
       return;
     }
 

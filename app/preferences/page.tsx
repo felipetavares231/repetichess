@@ -68,7 +68,6 @@ export default function PreferencesPage() {
   };
 
   useEffect(() => {
-    console.log(data);
     if (data?.rating && data?.coverage) {
       setRating(data?.rating);
       setCoverage(data?.coverage);
