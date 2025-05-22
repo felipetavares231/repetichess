@@ -18,6 +18,7 @@ interface OpeningExplorerProps {
   onClickMove: (move: "string") => void;
   onUndo: () => void;
   onChangeOrientation: () => void;
+  coverage: "Basic" | "Solid" | "Strong";
 }
 
 function OpeningExplorer({
@@ -26,6 +27,7 @@ function OpeningExplorer({
   onClickMove,
   onUndo,
   onChangeOrientation,
+  coverage,
 }: OpeningExplorerProps) {
   const theme = useTheme();
   const {data, isLoading, refetch} = useQuery({
@@ -42,6 +44,20 @@ function OpeningExplorer({
       return res.json();
     },
   });
+
+  const filteredMoves = React.useMemo(() => {
+    if (!data?.moves) return [];
+
+    if (coverage === "Basic") {
+      return data.moves.slice(0, 3); // top 3 moves
+    }
+
+    if (coverage === "Solid") {
+      return data.moves.slice(0, 5); // top 5 moves
+    }
+
+    return data.moves; // Strong = all moves
+  }, [data, coverage]);
 
   useEffect(() => {
     console.log("FEN RECEIVED BY OPENING EXPLORER: ", fen);
@@ -69,7 +85,7 @@ function OpeningExplorer({
           {data.opening?.name ? data.opening.name : "Opening Explorer"}
         </Typography>
       </div>
-      {data.moves.map((move: any, index: number) => {
+      {filteredMoves.map((move: any, index: number) => {
         return (
           <div
             key={`${move} - ${index}`}

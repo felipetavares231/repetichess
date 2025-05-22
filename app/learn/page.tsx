@@ -190,6 +190,7 @@ function LearnOpening() {
         <div className="w-[600px]">
           {fen !== undefined && (
             <OpeningExplorer
+              coverage={preferences?.coverage || "Strong"}
               onChangeOrientation={() => {
                 setOrientation((prev) => (prev == "white" ? "black" : "white"));
               }}
