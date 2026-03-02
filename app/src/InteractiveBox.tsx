@@ -1,5 +1,5 @@
 "use client";
-import React, {useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {Button, Typography, useTheme} from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
@@ -82,55 +82,86 @@ function InteractiveBox({
     "Wrong move — but don't give up!",
   ];
 
-  const message = useMemo(() => {
-    if (correct === undefined) return null;
+  const [message, setMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (correct === undefined) {
+      setMessage(null);
+      return;
+    }
     const messages = correct ? correctMoveMessages : incorrectMoveMessages;
-    return messages[Math.floor(Math.random() * messages.length)];
+    setMessage(messages[Math.floor(Math.random() * messages.length)]);
   }, [correct]);
 
   if (correct === undefined)
     return (
-      <div className="w-[300px]  rounded-2xl p-4 flex items-center gap-3 shadow-lg"></div>
+      <div
+        className="w-[360px] rounded-2xl p-6 flex items-center justify-center"
+        style={{
+          backgroundColor: "#1e1e1e",
+          border: "1px solid rgba(255,255,255,0.08)",
+          minHeight: 120,
+        }}>
+        <Typography
+          variant="body2"
+          sx={{color: "rgba(255,255,255,0.3)", textAlign: "center"}}>
+          Make your move...
+        </Typography>
+      </div>
     );
 
-  const bgColor = correct
-    ? theme.palette.success.main
-    : theme.palette.error.main;
-
   const borderColor = correct
-    ? theme.palette.text.primary
+    ? theme.palette.success.main
     : theme.palette.error.main;
 
   const difficulties: Difficulty[] = ["Easy", "Medium", "Hard"];
 
   return (
     <div
-      className="w-[400px]  rounded-2xl p-4 flex items-center gap-3 shadow-lg flex-col"
+      className="w-[360px] rounded-2xl p-6 flex items-center gap-4 shadow-lg flex-col"
       style={{
-        backgroundColor: "#262626",
-        border: `2px solid ${borderColor}`,
-        transition: "background-color 0.3s ease, border-color 0.3s ease",
+        backgroundColor: "#1e1e1e",
+        border: `1px solid ${borderColor}40`,
+        boxShadow: `0 4px 24px ${borderColor}15`,
+        transition: "all 0.3s ease",
       }}>
-      {correct ? (
-        <CheckCircleIcon fontSize="large" />
-      ) : (
-        <ErrorOutlineIcon fontSize="large" />
-      )}
-      <Typography variant="h6" fontWeight="bold">
-        {isOver ? "Nice! How Dificult was it to recall this opening?" : message}
+      <div
+        className="rounded-full p-2 flex items-center justify-center"
+        style={{backgroundColor: `${borderColor}18`}}>
+        {correct ? (
+          <CheckCircleIcon fontSize="large" sx={{color: borderColor}} />
+        ) : (
+          <ErrorOutlineIcon fontSize="large" sx={{color: borderColor}} />
+        )}
+      </div>
+      <Typography
+        variant="body1"
+        fontWeight="bold"
+        sx={{textAlign: "center", lineHeight: 1.5}}>
+        {isOver ? "How difficult was it to recall this opening?" : message}
       </Typography>
       {isOver && (
-        <div className="flex flex-row gap-x-8">
-          {difficulties.map((difficulty: Difficulty) => {
-            return (
-              <Button
-                key={`difficultybutton: ${difficulty}`}
-                variant="contained"
-                onClick={() => handleReviewDifficulty(difficulty)}>
-                {difficulty}
-              </Button>
-            );
-          })}
+        <div className="flex flex-row gap-3 w-full">
+          {difficulties.map((difficulty: Difficulty) => (
+            <Button
+              key={`difficultybutton: ${difficulty}`}
+              variant={difficulty === "Medium" ? "contained" : "outlined"}
+              fullWidth
+              onClick={() => handleReviewDifficulty(difficulty)}
+              sx={{
+                py: 1,
+                ...(difficulty !== "Medium" && {
+                  borderColor: "rgba(255,255,255,0.15)",
+                  color: "rgba(255,255,255,0.8)",
+                  "&:hover": {
+                    borderColor: "primary.main",
+                    backgroundColor: "rgba(156,33,51,0.1)",
+                  },
+                }),
+              }}>
+              {difficulty}
+            </Button>
+          ))}
         </div>
       )}
     </div>

@@ -19,7 +19,17 @@ interface BoardProps {
 }
 
 function Board({onChange, chess, dests, setDests, orientation}: BoardProps) {
-  const size = Math.min(window.innerWidth, window.innerHeight) - 100;
+  const [size, setSize] = useState<number | null>(null);
+
+  useEffect(() => {
+    const computeSize = () =>
+      Math.min(window.innerWidth, window.innerHeight) - 100;
+    setSize(computeSize());
+
+    const handleResize = () => setSize(computeSize());
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     updateDests(chess, dests, setDests);
@@ -29,8 +39,15 @@ function Board({onChange, chess, dests, setDests, orientation}: BoardProps) {
     onChange(chess.fen());
   }, [chess.fen()]);
 
+  if (size === null) return null;
+
   return (
-    <div>
+    <div
+      className="rounded-lg overflow-hidden"
+      style={{
+        boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+        lineHeight: 0,
+      }}>
       <Chessground
         width={size}
         height={size}
@@ -47,7 +64,6 @@ function Board({onChange, chess, dests, setDests, orientation}: BoardProps) {
           },
           check: chess.inCheck(),
           orientation: orientation,
-
           fen: chess.fen(),
         }}
       />

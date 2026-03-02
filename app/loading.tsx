@@ -1,5 +1,23 @@
 export default function Loading() {
-  // Stack uses React Suspense, which will render this page while user data is being fetched.
-  // See: https://nextjs.org/docs/app/api-reference/file-conventions/loading
-  return <></>;
+  return (
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+      }}>
+      <div
+        style={{
+          width: 36,
+          height: 36,
+          border: "3px solid rgba(255,255,255,0.1)",
+          borderTopColor: "#9c2133",
+          borderRadius: "50%",
+          animation: "spin 0.8s linear infinite",
+        }}
+      />
+      <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+    </div>
+  );
 }

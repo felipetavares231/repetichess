@@ -155,38 +155,38 @@ function LearnOpening() {
   }, [preferences]);
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="w-[100%]">
+    <div className="flex flex-col items-center min-h-screen">
+      <div className="w-full">
         <NavBar />
       </div>
-      <div className="flex flex-1 justify-center">
-        <div className="flex-1"></div>
-        <div className="flex flex-1">
-          <div>
+      <div className="flex flex-1 justify-center items-start gap-4 px-4 w-full max-w-[1600px]">
+        <div className="flex items-start gap-3 pt-1">
+          <div className="flex flex-col gap-2">
             <IconButton
               onClick={() => setIsSaving(true)}
               sx={{
-                borderRadius: "8px",
+                borderRadius: "10px",
                 backgroundColor: "primary.main",
                 color: "white",
+                width: 42,
+                height: 42,
                 "&:hover": {
-                  backgroundColor: "primary.dark",
+                  backgroundColor: "primary.light",
+                  transform: "scale(1.05)",
                 },
               }}>
               <Done />
             </IconButton>
           </div>
-          <div className="ml-4">
-            <Board
-              orientation={orientation}
-              onChange={(fen) => setFen(fen)}
-              chess={chess}
-              dests={dests}
-              setDests={setDests}
-            />
-          </div>
+          <Board
+            orientation={orientation}
+            onChange={(fen) => setFen(fen)}
+            chess={chess}
+            dests={dests}
+            setDests={setDests}
+          />
         </div>
-        <div className="w-[600px]">
+        <div className="w-[500px] shrink-0">
           {fen !== undefined && (
             <OpeningExplorer
               coverage={preferences?.coverage || "Strong"}
@@ -208,47 +208,41 @@ function LearnOpening() {
             />
           )}
         </div>
-        <Modal
-          aria-labelledby="transition-modal-title"
-          aria-describedby="transition-modal-description"
-          open={isSaving}
-          onClose={() => setIsSaving(false)}
-          closeAfterTransition>
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 400,
-              bgcolor: "background.paper",
-              border: "2px solid #000",
-              boxShadow: 24,
-              p: 4,
-              borderRadius: 4,
-              flexDirection: "column",
-              display: "flex",
-            }}>
-            <Typography
-              id="transition-modal-title"
-              variant="h6"
-              component="h2"
-              fontWeight={"bold"}>
-              Save Board
-            </Typography>
-            <TextField
-              onChange={(e) => setBoardName(e.target.value)}
-              sx={{
-                marginBottom: 2,
-              }}
-              variant="outlined"
-              label="Name e.g.: Queen's Gambit, Caro Kann"></TextField>
-            <Button variant="contained" onClick={handleSaveBoard}>
-              Save
-            </Button>
-          </Box>
-        </Modal>
       </div>
+      <Modal
+        open={isSaving}
+        onClose={() => setIsSaving(false)}
+        closeAfterTransition>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 420,
+            bgcolor: "background.paper",
+            border: "1px solid rgba(255,255,255,0.1)",
+            boxShadow: "0 16px 48px rgba(0,0,0,0.5)",
+            p: 4,
+            borderRadius: 3,
+            flexDirection: "column",
+            display: "flex",
+            gap: 2,
+          }}>
+          <Typography variant="h6" component="h2" fontWeight="bold">
+            Save Opening
+          </Typography>
+          <TextField
+            onChange={(e) => setBoardName(e.target.value)}
+            variant="outlined"
+            label="Name e.g.: Queen's Gambit, Caro-Kann"
+            fullWidth
+          />
+          <Button variant="contained" size="large" onClick={handleSaveBoard}>
+            Save
+          </Button>
+        </Box>
+      </Modal>
     </div>
   );
 }

@@ -150,38 +150,46 @@ function PracticeOpening() {
   }, [chess.history()]);
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex flex-1 w-[100%]">
+    <div className="flex flex-col items-center min-h-screen">
+      <div className="w-full">
         <NavBar />
       </div>
-      <div className="flex justify-center items-center">
-        <div className="flex flex-1"></div>
-        <div className="ml-4 flex flex-row">
-          <div className="mr-2 flex-col flex">
+      <div className="flex justify-center items-start gap-4 px-4">
+        <div className="flex items-start gap-3 pt-1">
+          <div className="flex flex-col gap-2">
             <IconButton
               onClick={handleDeleteBoard}
               sx={{
-                borderRadius: "8px",
-                backgroundColor: "primary.main",
+                borderRadius: "10px",
+                backgroundColor: "rgba(255,255,255,0.06)",
                 color: "white",
+                width: 42,
+                height: 42,
+                border: "1px solid rgba(255,255,255,0.1)",
                 "&:hover": {
-                  backgroundColor: "primary.dark",
+                  backgroundColor: "error.main",
+                  borderColor: "error.main",
+                  transform: "scale(1.05)",
                 },
               }}>
-              <Delete />
+              <Delete fontSize="small" />
             </IconButton>
-            <div className="mt-2"></div>
             <IconButton
               onClick={handleEditBoard}
               sx={{
-                borderRadius: "8px",
-                backgroundColor: "primary.main",
+                borderRadius: "10px",
+                backgroundColor: "rgba(255,255,255,0.06)",
                 color: "white",
+                width: 42,
+                height: 42,
+                border: "1px solid rgba(255,255,255,0.1)",
                 "&:hover": {
-                  backgroundColor: "primary.dark",
+                  backgroundColor: "primary.main",
+                  borderColor: "primary.main",
+                  transform: "scale(1.05)",
                 },
               }}>
-              <Edit />
+              <Edit fontSize="small" />
             </IconButton>
           </div>
           <Board
@@ -191,17 +199,15 @@ function PracticeOpening() {
             dests={dests}
             setDests={setDests}
           />
-          <div className="ml-4"></div>
-          <InteractiveBox
-            correct={correct}
-            isOver={isOver}
-            currentInterval={data?.currentInterval}
-            easeFactor={parseFloat(data?.easeFactor)}
-            lastReviewDate={data?.lastReviewDate}
-            boardId={data?.id}
-          />
-          <div className="ml-4"></div>
         </div>
+        <InteractiveBox
+          correct={correct}
+          isOver={isOver}
+          currentInterval={data?.currentInterval}
+          easeFactor={parseFloat(data?.easeFactor)}
+          lastReviewDate={data?.lastReviewDate}
+          boardId={data?.id}
+        />
       </div>
     </div>
   );

@@ -78,19 +78,31 @@ export default function PreferencesPage() {
     <div>
       <NavBar />
       <div
-        className="flex justify-center items-center min-h-screen flex-col"
-        style={{backgroundColor: theme.palette.primary.main}}>
+        className="flex justify-center items-center py-16 flex-col"
+        style={{minHeight: "calc(100vh - 72px)"}}>
         <div
-          className="p-16 border rounded-md border-white flex justify-center flex-col text-center"
+          className="p-10 rounded-2xl flex justify-center flex-col text-center items-center"
           style={{
-            backgroundColor: theme.palette.background.default,
+            backgroundColor: theme.palette.background.paper,
+            border: "1px solid rgba(255,255,255,0.08)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.3)",
+            maxWidth: 500,
+            width: "100%",
           }}>
-          <div className="flex flex-1 mb-2">
-            <img src={"/logo.png"} alt="logo" />
-          </div>
-          <div className="mt-4">
-            <Typography variant="h5" fontWeight={"bold"}>
+          <img
+            src={"/logo.png"}
+            alt="logo"
+            className="mb-4"
+            style={{maxWidth: 180}}
+          />
+          <div className="mt-4 mb-1">
+            <Typography variant="h5" fontWeight="bold">
               Rating
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{color: "rgba(255,255,255,0.45)", mt: 0.5}}>
+              Select your skill level
             </Typography>
           </div>
           <FormControl className="items-center flex">
@@ -116,9 +128,21 @@ export default function PreferencesPage() {
               />
             </RadioGroup>
           </FormControl>
-          <div className="mt-4">
-            <Typography variant="h5" fontWeight={"bold"}>
+          <div
+            className="w-full my-4"
+            style={{
+              height: 1,
+              background: "rgba(255,255,255,0.08)",
+            }}
+          />
+          <div className="mb-1">
+            <Typography variant="h5" fontWeight="bold">
               Coverage
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{color: "rgba(255,255,255,0.45)", mt: 0.5}}>
+              How many variations to study
             </Typography>
           </div>
           <FormControl className="flex items-center">
@@ -144,8 +168,12 @@ export default function PreferencesPage() {
               />
             </RadioGroup>
           </FormControl>
-          <div className="mt-8">
-            <Button variant="contained" onClick={handleSavePreferences}>
+          <div className="mt-6 w-full">
+            <Button
+              variant="contained"
+              fullWidth
+              size="large"
+              onClick={handleSavePreferences}>
               Save Preferences
             </Button>
           </div>

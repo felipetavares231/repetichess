@@ -1,27 +1,32 @@
 "use client";
-import {Button, createTheme, Typography, useTheme} from "@mui/material";
-import {OAuthButton, SignUp} from "@stackframe/stack";
-import Image from "next/image";
-import {useRouter} from "next/navigation";
+import {useTheme} from "@mui/material";
+import {SignUp} from "@stackframe/stack";
 import React from "react";
 
 export default function SignUpPage() {
-  const router = useRouter();
-
   const theme = useTheme();
 
   return (
     <div
       className="flex justify-center items-center min-h-screen flex-col"
-      style={{backgroundColor: theme.palette.primary.main}}>
+      style={{
+        background: `radial-gradient(ellipse at top, ${theme.palette.primary.dark} 0%, ${theme.palette.background.default} 70%)`,
+      }}>
       <div
-        className="p-16 border rounded-md border-white flex justify-center flex-col text-center"
+        className="p-10 rounded-2xl flex justify-center flex-col text-center items-center"
         style={{
-          backgroundColor: theme.palette.background.default,
+          backgroundColor: theme.palette.background.paper,
+          border: "1px solid rgba(255,255,255,0.08)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.4)",
+          maxWidth: 440,
+          width: "100%",
         }}>
-        <div className="flex flex-1 mb-2">
-          <img src={"/logo.png"} alt="logo" />
-        </div>
+        <img
+          src={"/logo.png"}
+          alt="logo"
+          className="mb-4"
+          style={{maxWidth: 200}}
+        />
         <SignUp automaticRedirect={false} />
       </div>
     </div>

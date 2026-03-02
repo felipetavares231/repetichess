@@ -64,63 +64,88 @@ function ListOpening() {
   return (
     <div>
       <NavBar />
-      <div className="flex flex-wrap justify-center ml-8">
-        {data &&
-          data.map((board: any) => {
-            const chess = new Chess();
-            board.board.map((move: string) => {
-              chess.move(move);
-            });
+      <div className="px-6 pb-8">
+        <div className="text-center mb-8">
+          <Typography variant="h4" fontWeight="bold">
+            Your Openings
+          </Typography>
+          <Typography
+            variant="body2"
+            sx={{color: "rgba(255,255,255,0.45)", mt: 0.5}}>
+            {data?.length
+              ? `${data.length} opening${data.length !== 1 ? "s" : ""} saved`
+              : "No openings yet"}
+          </Typography>
+        </div>
+        <div className="flex flex-wrap justify-center gap-6">
+          {data &&
+            data.map((board: any) => {
+              const chess = new Chess();
+              board.board.forEach((move: string) => chess.move(move));
+              const needsReview = isBefore(board.lastReviewDate, new Date());
 
-            return (
-              <div
-                key={`board ${board.id}`}
-                onClick={() => {
-                  if (!user) return;
-                  window.location.href = `/practice?board=${board.id}`;
-                }}
-                className="p-2 rounded-md transition-transform duration-200 hover:scale-105 ml-4 mb-8 relative"
-                style={{
-                  backgroundColor: theme.palette.primary.main,
-                }}>
-                <Chessground
-                  key={`board ${board.id}`}
-                  width={450}
-                  height={450}
-                  config={{
-                    check: chess.inCheck(),
-                    fen: chess.fen(),
-                    viewOnly: true,
-                    orientation: board.orientation,
-                  }}
-                />
+              return (
                 <div
-                  className="absolute top-0 left-0 rounded-md"
+                  key={`board ${board.id}`}
+                  onClick={() => {
+                    if (!user) return;
+                    window.location.href = `/practice?board=${board.id}`;
+                  }}
+                  className="rounded-xl cursor-pointer transition-all duration-250 hover:scale-[1.03] relative group"
                   style={{
-                    backgroundColor: theme.palette.primary.main,
+                    backgroundColor: theme.palette.background.paper,
+                    border: "1px solid rgba(255,255,255,0.08)",
+                    boxShadow: "0 4px 20px rgba(0,0,0,0.3)",
+                    overflow: "hidden",
                   }}>
-                  {isBefore(board.lastReviewDate, new Date()) ? (
-                    <Tooltip title="Needs Reviewing">
-                      <Report />
-                    </Tooltip>
-                  ) : (
-                    <Tooltip
-                      title={`Last Time Reviewed: ${format(
-                        board.lastReviewDate,
-                        "MM/dd/yyyy",
-                      )}`}>
-                      <Done />
-                    </Tooltip>
-                  )}
+                  <div className="p-3">
+                    <Chessground
+                      key={`board ${board.id}`}
+                      width={380}
+                      height={380}
+                      config={{
+                        check: chess.inCheck(),
+                        fen: chess.fen(),
+                        viewOnly: true,
+                        orientation: board.orientation,
+                      }}
+                    />
+                  </div>
+                  <div
+                    className="absolute top-3 left-3 rounded-lg px-1.5 py-0.5 flex items-center gap-1"
+                    style={{
+                      backgroundColor: needsReview
+                        ? "rgba(211,47,47,0.85)"
+                        : "rgba(46,125,50,0.85)",
+                      backdropFilter: "blur(4px)",
+                    }}>
+                    {needsReview ? (
+                      <Tooltip title="Needs Reviewing">
+                        <Report sx={{fontSize: 18}} />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip
+                        title={`Reviewed: ${format(
+                          board.lastReviewDate,
+                          "MMM d, yyyy",
+                        )}`}>
+                        <Done sx={{fontSize: 18}} />
+                      </Tooltip>
+                    )}
+                  </div>
+                  <div
+                    className="px-4 py-3 text-center"
+                    style={{
+                      borderTop: "1px solid rgba(255,255,255,0.06)",
+                    }}>
+                    <Typography variant="h6" fontWeight="bold">
+                      {board.name}
+                    </Typography>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <Typography variant="h5" style={{fontWeight: "bold"}}>
-                    {board.name}
-                  </Typography>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })}
+        </div>
       </div>
     </div>
   );

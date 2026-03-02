@@ -8,31 +8,46 @@ interface ResultBarProps {
 
 const ExplorerBar: React.FC<ResultBarProps> = ({white, black, draw}) => {
   const total = white + black + draw;
-  const whitePercent = (white * 100) / total;
+  const whitePercent = total ? (white / total) * 100 : 0;
   const blackPercent = total ? (black / total) * 100 : 0;
   const drawPercent = total ? (draw / total) * 100 : 0;
 
   return (
-    <div className="w-80 ml-4 mr-4">
-      <div className="flex text-sm mb-1 justify-between"></div>
-      <div className="flex h-6 w-full rounded overflow-hidden border border-gray-300">
+    <div className="w-56 flex items-center">
+      <div
+        className="flex h-5 w-full rounded-md overflow-hidden"
+        style={{fontSize: "0.7rem", fontWeight: 600}}>
         <div
-          className="flex bg-white text-black justify-center"
-          style={{width: `${whitePercent}%`}}
-          title={`White wins: ${whitePercent.toFixed(1)}%`}>
-          {`${whitePercent.toFixed(1)}%`}
+          className="flex items-center justify-center text-black"
+          style={{
+            width: `${whitePercent}%`,
+            backgroundColor: "#e8e8e8",
+            transition: "width 0.3s ease",
+          }}
+          title={`White: ${whitePercent.toFixed(1)}%`}>
+          {whitePercent >= 12 ? `${Math.round(whitePercent)}%` : ""}
         </div>
         <div
-          className="flex bg-gray-500 justify-center"
-          style={{width: `${drawPercent}%`}}
+          className="flex items-center justify-center"
+          style={{
+            width: `${drawPercent}%`,
+            backgroundColor: "#888",
+            color: "#fff",
+            transition: "width 0.3s ease",
+          }}
           title={`Draw: ${drawPercent.toFixed(1)}%`}>
-          {drawPercent >= 10 ? `${drawPercent.toFixed(1)}%` : ""}
+          {drawPercent >= 12 ? `${Math.round(drawPercent)}%` : ""}
         </div>
         <div
-          className="flex bg-black justify-center"
-          style={{width: `${blackPercent}%`}}
-          title={`Black wins: ${blackPercent.toFixed(1)}%`}>
-          {`${blackPercent.toFixed(1)}%`}
+          className="flex items-center justify-center"
+          style={{
+            width: `${blackPercent}%`,
+            backgroundColor: "#333",
+            color: "#ccc",
+            transition: "width 0.3s ease",
+          }}
+          title={`Black: ${blackPercent.toFixed(1)}%`}>
+          {blackPercent >= 12 ? `${Math.round(blackPercent)}%` : ""}
         </div>
       </div>
     </div>
